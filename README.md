@@ -8,4 +8,4 @@ This section contains detailed descriptions and BigQuery queries for various cus
 
 ### High-Value, High-Frequency Young Adults
 
-This segment identifies young adult customers (20-39 years old) who demonstrate both high purchasing frequency and high customer lifetime value. More details, including the specific criteria and BigQuery SQL query, can be found in the [Customer Segment Description](customer_segment_description.md) file.
+This segment identifies young adult customers (20-39 years old) who demonstrate both high purchasing frequency and high customer lifetime value. More details, including the specific criteria and BigQuery SQL query, can be found in the [Customer Segment Description](high_value_young_shoppers.md) file.
