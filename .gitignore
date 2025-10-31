@@ -1,0 +1,45 @@
+
+# Generic ignores
+.DS_Store
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+venv/
+.venv/
+
+# Node.js
+node_modules/
+build/
+dist/
+
+# Java
+*.class
+.gradle/
+target/
+
+# C/C++
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Gemini specific ignores
+.gemini/
