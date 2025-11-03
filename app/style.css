@@ -44,6 +44,21 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+#app-description {
+    padding: 20px;
+    background-color: #e9ecef; /* Light gray background */
+    border-radius: 8px;
+    margin: 20px auto; /* Center the description and add vertical margin */
+    max-width: 800px; /* Make the description div smaller */
+    color: #343a40;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+#app-description p {
+    margin: 0;
+}
+
 #use-case-nav {
     width: 20%;
     padding-right: 20px;
