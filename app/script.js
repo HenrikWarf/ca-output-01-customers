@@ -16,7 +16,7 @@ async function loadUseCase(fileName) {
         useCaseDetails.innerHTML = `
             <h2>${useCase.name}</h2>
             <p><strong>Description:</strong> ${useCase.description}</p>
-            <p><strong>Insights:</strong> ${useCase.insights}</p>
+            <div class="insights-content"><strong>Insights:</strong> ${marked.parse(useCase.insights)}</div>
             <h3>BigQuery SQL Query:</h3>
             <div class="query-container">
                 <pre><code class="language-sql" id="bigquery-query">${useCase.query}</code></pre>

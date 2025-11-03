@@ -1,3 +1,12 @@
+# Target Users
+
+Given the technical nature of the Gemini CLI and its integration with BigQuery for data analytics, this solution is primarily designed for:
+
+*   **Data Analysts and Scientists:** Professionals who regularly perform complex queries, analyze large datasets in BigQuery, and need to extract insights for reporting and strategic planning.
+*   **Data Engineers:** Responsible for building, managing, and optimizing data pipelines and infrastructure that interact with BigQuery.
+*   **Business Intelligence Developers:** Who leverage BigQuery data to create and maintain analytical reports and dashboards.
+*   **Cloud Data Specialists:** Managing and administering BigQuery resources, datasets, and tables.
+
 # Gemini CLI BigQuery Project Template Instructions
 
 This document provides comprehensive instructions for setting up and utilizing this repository as a template for new BigQuery data analytics projects with the Gemini CLI. It covers initial setup, integrating new BigQuery data, defining analytical use cases, and running analyses.
