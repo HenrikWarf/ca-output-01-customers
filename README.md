@@ -8,17 +8,17 @@ This section contains detailed descriptions and BigQuery queries for various cus
 
 ### High-Value, High-Frequency Young Adults
 
-This segment identifies young adult customers (20-39 years old) who demonstrate both high purchasing frequency and high customer lifetime value. More details, including the specific criteria and BigQuery SQL query, can be found in the [Customer Segment Description](high_value_young_shoppers.md) file.
+This segment identifies young adult customers (20-39 years old) who demonstrate both high purchasing frequency and high customer lifetime value. More details, including the specific criteria and BigQuery SQL query, can be found in the [Customer Segment Description](use_case_docs/high_value_young_shoppers.md) file.
 
 ### At-Risk Customers
 
-This segment identifies customers who are showing signs of disengagement and are at a higher risk of churning. More details, including the specific criteria and BigQuery SQL query, can be found in the [At-Risk Customers](at_risk_customers.md) file.
+This segment identifies customers who are showing signs of disengagement and are at a higher risk of churning. More details, including the specific criteria and BigQuery SQL query, can be found in the [At-Risk Customers](use_case_docs/at_risk_customers.md) file.
 
 
 ### RFM Customer Segmentation
 
-This analysis segments customers based on their Recency (how recently they purchased), Frequency (how often they purchase), and Monetary (how much they spend) values. More details, including the specific criteria and BigQuery SQL query, can be found in the [RFM Customer Segmentation](rfm_customer_segmentation.md) file.
+This analysis segments customers based on their Recency (how recently they purchased), Frequency (how often they purchase), and Monetary (how much they spend) values. More details, including the specific criteria and BigQuery SQL query, can be found in the [RFM Customer Segmentation](use_case_docs/rfm_customer_segmentation.md) file.
 
 ### Primary Shopping Channel by Age Group
 
-This analysis examines the primary shopping channel preferences of customers across different age groups. More details, including the specific criteria and BigQuery SQL query, can be found in the [Primary Shopping Channel by Age Group](primary_shopping_channel_by_age_group.md) file.
+This analysis examines the primary shopping channel preferences of customers across different age groups. More details, including the specific criteria and BigQuery SQL query, can be found in the [Primary Shopping Channel by Age Group](use_case_docs/primary_shopping_channel_by_age_group.md) file.
