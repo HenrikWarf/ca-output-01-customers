@@ -15,7 +15,13 @@ This document provides comprehensive instructions for setting up and utilizing t
 2.  **Install Gemini CLI:**
     Ensure you have the Gemini CLI installed and configured. Refer to the official Gemini CLI documentation for installation instructions if needed.
 
-3.  **Configure Environment Variables (`.env`):
+3.  **Install BigQuery Extension:**
+    To enable BigQuery functionalities, install the BigQuery extension for Gemini CLI: 
+    ```bash
+    gemini extensions install https://github.com/gemini-cli-extensions/bigquery-data-analytics
+    ```
+
+4.  **Configure Environment Variables (`.env`):
     The `.env` file is crucial for connecting to your BigQuery project.
     *   Open the `.env` file in your new project directory.
     *   Set the `BIGQUERY_PROJECT` variable to your Google Cloud Project ID where your BigQuery data resides.
@@ -26,6 +32,27 @@ This document provides comprehensive instructions for setting up and utilizing t
     BIGQUERY_PROJECT=your-gcp-project-id
     BIGQUERY_LOCATION=us-central1
     ```
+
+5.  **Install Application Dependencies:**
+    If you plan to use the `app/` directory for frontend visualization or other Node.js-based functionalities, you need to install its dependencies.
+    ```bash
+    cd app/
+    npm install
+    cd ..
+    ```
+
+6.  **Running and Accessing the Application:**
+    The `app/` directory contains a simple Node.js application that can serve as a frontend for your data visualizations.
+
+    *   **To Run the Application:**
+        From the project root directory, execute:
+        ```bash
+        cd app/
+        npm start
+        ```
+        This will typically start a local web server.
+    *   **To Access the Application:**
+        Open your web browser and navigate to the address provided by the `npm start` command (usually `http://localhost:3000` or similar).
 
 ## II. Integrating New BigQuery Data and Updating `GEMINI.md`
 
