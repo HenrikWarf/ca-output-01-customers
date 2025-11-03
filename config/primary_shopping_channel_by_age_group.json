@@ -1,0 +1,14 @@
+{
+  "name": "Primary Shopping Channel by Age Group",
+  "category": "Customer Segmentation",
+  "description": "Analysis of customer primary shopping channel preferences across different age groups.",
+  "insights": "Online - Website is the most preferred channel across all age groups, followed by Online - App. The 18-24 age group shows the highest overall engagement. This suggests a need for a strong online presence, with tailored strategies for different age demographics.",
+  "query": "SELECT CASE WHEN age < 18 THEN '0-17' WHEN age BETWEEN 18 AND 24 THEN '18-24' WHEN age BETWEEN 25 AND 34 THEN '25-34' WHEN age BETWEEN 35 AND 44 THEN '35-44' WHEN age BETWEEN 45 AND 54 THEN '45-54' WHEN age BETWEEN 55 AND 64 THEN '55-64' ELSE '65+' END AS age_group, primary_shopping_channel, COUNT(customer_id) AS customer_count FROM customer_data_retail.customers GROUP BY age_group, primary_shopping_channel ORDER BY age_group, customer_count DESC;",
+  "visualization": {
+    "type": "bar",
+    "x_axis": "age_group",
+    "y_axis": "customer_count",
+    "color_by": "primary_shopping_channel",
+    "tooltip": ["age_group", "primary_shopping_channel", "customer_count"]
+  }
+}

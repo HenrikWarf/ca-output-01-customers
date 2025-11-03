@@ -17,3 +17,7 @@ This segment identifies customers who are showing signs of disengagement and are
 ### RFM Customer Segmentation
 
 This analysis segments customers based on their Recency (how recently they purchased), Frequency (how often they purchase), and Monetary (how much they spend) values. More details, including the specific criteria and BigQuery SQL query, can be found in the [RFM Customer Segmentation](rfm_customer_segmentation.md) file.
+
+### Primary Shopping Channel by Age Group
+
+This analysis examines the primary shopping channel preferences of customers across different age groups. More details, including the specific criteria and BigQuery SQL query, can be found in the [Primary Shopping Channel by Age Group](primary_shopping_channel_by_age_group.md) file.
