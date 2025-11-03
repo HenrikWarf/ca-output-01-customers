@@ -11,11 +11,11 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
+// Serve the config directory specifically
+app.use('/config', express.static(path.join(__dirname, '..', 'config')));
+
 // Serve static files from the current directory
 app.use(express.static(__dirname));
-
-// Serve the config directory specifically
-app.use('/config', express.static(path.join(__dirname, 'config')));
 
 const bigquery = new BigQuery({
   projectId: process.env.BIGQUERY_PROJECT,
@@ -40,7 +40,7 @@ app.post('/query-bigquery', async (req, res) => {
 
 app.get('/list-config-files', async (req, res) => {
   try {
-    const configPath = path.join(__dirname, 'config');
+    const configPath = path.join(__dirname, '..', 'config');
     const files = await fs.readdir(configPath);
     const jsonFiles = files.filter(file => file.endsWith('.json'));
     res.json(jsonFiles);
