@@ -35,29 +35,16 @@ The `GEMINI.md` file serves as the primary context for the Gemini CLI, describin
     Determine the specific BigQuery dataset(s) and table(s) you intend to analyze in your new project.
 
 2.  **Discover BigQuery Schema using Gemini CLI Tools:**
-    You can use the Gemini CLI's built-in BigQuery tools to inspect your data:
-    *   **List Datasets:** To see available datasets in your project:
-        ```tool_code
-        print(default_api.list_dataset_ids(project="your-gcp-project-id"))
-        ```
-    *   **List Tables in a Dataset:** To see tables within a specific dataset:
-        ```tool_code
-        print(default_api.list_table_ids(dataset="your_dataset_id", project="your-gcp-project-id"))
-        ```
-    *   **Get Table Schema:** To get detailed schema information for a specific table (column names, types, descriptions):
-        ```tool_code
-        print(default_api.get_table_info(dataset="your_dataset_id", table="your_table_id", project="your-gcp-project-id"))
-        ```
+    You can use the Gemini CLI's BigQuery extension to inspect your data. This extension allows you to list available datasets within your Google Cloud Project and then list the tables within a specific dataset. You can also retrieve detailed schema information (column names, types, descriptions) for any given table.
 
-3.  **Automate `GEMINI.md` Update (Using a New Command File):**
-    You mentioned creating a new command file for this. Let's assume you've created a script named `update_gemini_bq_context.sh` in the `.gemini/commands/` directory. This script should automate fetching the schema and updating the "BigQuery Data Overview" section of your `GEMINI.md`.
+3.  **Automate `GEMINI.md` Update (Using the `/initiate_repo` command):**
+    The `/initiate_repo` command is designed to set up the connection to BigQuery and document the data structure in the `GEMINI.md` context file. It uses the information gathered from discovering your BigQuery schema to populate the "BigQuery Data Overview" section of `GEMINI.md`.
 
-    *   **Purpose of `update_gemini_bq_context.sh`:** This command is designed to fetch the schema of a specified BigQuery table and automatically update the `GEMINI.md` file's "BigQuery Data Overview" section with the new dataset, table, and schema summary.
     *   **How to Use:**
         ```bash
-        gemini run update_gemini_bq_context.sh <your_dataset_id> <your_table_id>
+        /initiate_repo
         ```
-        *Replace `<your_dataset_id>` and `<your_table_id>` with the actual IDs of your BigQuery dataset and table.*
+        This command will guide you through selecting the dataset and table to document.
 
 4.  **Manually Refine `GEMINI.md`:**
     After the automated update, open `GEMINI.md` and review the "BigQuery Data Overview" section.
