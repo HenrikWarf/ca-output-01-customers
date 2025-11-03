@@ -1,0 +1,6 @@
+{
+  "name": "High-Value, High-Frequency Young Adults",
+  "description": "This segment identifies young adult customers (20-39 years old) who demonstrate both high purchasing frequency and high customer lifetime value.",
+  "insights": "This segment represents a core group for sustained revenue and brand loyalty. They are likely early adopters and influencers. Targeted marketing and exclusive offers can further enhance their engagement.",
+  "query": "SELECT\n  customer_id,\n  age,\n  gender,\n  location,\n  total_spent_ltv,\n  purchase_frequency,\n  average_order_value,\n  total_number_of_orders,\n  primary_shopping_channel,\n  preferred_categories,\n  style_preference\nFROM\n  `customer_data_retail.customers`\nWHERE\n  age BETWEEN 20 AND 39\n  AND purchase_frequency = 'High'\n  AND total_spent_ltv >= 1090.77;"
+}
