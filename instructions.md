@@ -53,38 +53,40 @@ The `GEMINI.md` file serves as the primary context for the Gemini CLI, describin
 
 ## III. Defining Analytical Use Cases
 
-This repository uses `config/` for defining specific analytical queries and `use_case_docs/` for documenting them.
+This repository uses the `/save_analysis` command to streamline the process of documenting and integrating new customer segments or analyses. When you have a use case ready to be saved, you can call this command, and it will automate the following steps:
 
-1.  **Create/Modify Configuration Files (`config/*.json`):
-    *   Examine the existing JSON files in `config/` (e.g., `at_risk_customers.json`). These files define the parameters for BigQuery queries, such as fields to select, filters to apply, and metrics to calculate.
-    *   Create new JSON files or modify existing ones to define the specific analyses you want to perform on your new BigQuery data.
-    *   **Example:** If you want to analyze product sales by region, you might create `product_sales_by_region.json` with appropriate `model`, `explore`, `fields`, and `filters` for your new data.
+*   **Create a Dedicated Markdown File:** A new markdown file (e.g., `[segment_name].md`) will be created in the `use_case_docs/` directory. This file will include a "Use Case Description," "Segmentation Criteria," "BigQuery Implementation" (SQL query), and "How to Use This Segment."
+*   **Update `README.md`:** The `README.md` file will be updated under the `## Customer Segmentation` heading with a new sub-heading for the segment, a brief description, and a link to the newly created markdown file.
+*   **Create JSON Configuration File:** A corresponding JSON configuration file will be created in the `config/` directory. This file will adhere to a predefined structure, including fields for `name`, `category`, `description`, `insights`, `query`, and `visualization` parameters.
 
-2.  **Document Use Cases (`use_case_docs/*.md`):
-    *   For every new or modified configuration file in `config/`, create a corresponding Markdown file in `use_case_docs/`.
-    *   These documentation files should explain:
-        *   The objective of the analysis.
-        *   The BigQuery tables and columns involved.
-        *   How the results should be interpreted.
-        *   Any assumptions or limitations.
+**How to Use the `/save_analysis` Command:**
+When you have completed an analysis and are ready to save it, simply run:
+```bash
+/save_analysis
+```
+The command will then prompt you for the necessary details to generate the documentation and configuration files.
 
 ## IV. Running Analyses with Gemini CLI
 
-Once your `GEMINI.md` is updated and your use cases are defined, you can leverage the Gemini CLI to run your analyses.
+Once your `GEMINI.md` is updated and your data context is established, you can leverage the Gemini CLI for natural language data analysis. The Gemini CLI, powered by its BigQuery Extension, can interpret your questions, generate the appropriate SQL queries, and execute them against your BigQuery data. This allows you to derive insights without writing SQL manually.
 
-1.  **Execute Ad-hoc SQL Queries:**
-    For quick data exploration or specific queries not covered by pre-defined commands:
-    ```tool_code
-    print(default_api.execute_sql(sql="SELECT * FROM `your-gcp-project-id.your_dataset_id.your_table_id` LIMIT 10"))
-    ```
+**Process for Natural Language Analysis:**
 
-2.  **Use Pre-defined Commands (`.gemini/commands/`):
-    The `.gemini/commands/` directory contains shell scripts that encapsulate common analytical tasks, often leveraging the `config/*.json` files.
-    *   **Example:** To run the "at-risk customers" analysis (assuming you've adapted `at_risk_customers.json` to your new data):
-        ```bash
-        gemini run at_risk_customers_command.sh # (assuming a command script exists for this)
-        ```
-    *   Review the existing command scripts and adapt them or create new ones to execute your custom queries defined in `config/`. These scripts typically use `execute_sql` or other BigQuery tools with parameters from the JSON config files.
+1.  **Ask a Question:** Simply pose your data-related questions in natural language directly to the Gemini CLI. The more context you provide (referencing column names, metrics, and desired outcomes), the better the generated SQL will be.
+2.  **SQL Generation and Execution:** The Gemini CLI will use its BigQuery Extension to understand your query, generate the corresponding BigQuery SQL, and then execute it.
+3.  **Receive Insights:** The results of the SQL query will be presented to you, providing the insights you requested.
+
+**Examples of Questions to Ask:**
+
+*   "Show me the total number of orders and average order value by acquisition source."
+*   "What is the distribution of customers by age and gender."
+*   "Identify the top 10 customers by total spent (LTV) and their primary shopping channel."
+*   "How many customers registered in the last quarter?"
+*   "Calculate the average return rate percentage for each preferred category."
+*   "Find customers who have a high purchase frequency but a low average order value."
+*   "What are the most preferred categories among customers with high total spent?"
+*   "Analyze the average items per order for each style preference."
+*   "Show me the trend of new customer registrations over time."
 
 ## V. Advanced Usage and Customization
 
