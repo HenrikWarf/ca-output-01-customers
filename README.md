@@ -1,4 +1,4 @@
-# Customer Data Insights Repository
+# (Example Repo) Customer Data Insights Repository
 
 This repository serves as a central location for insights derived from our customer dataset. It primarily focuses on identifying valuable customer segments and providing actionable information to inform marketing strategies, product development, and customer relationship management. As we continue our analysis, more insight types will be added.
 
