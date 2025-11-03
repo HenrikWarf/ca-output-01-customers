@@ -13,3 +13,7 @@ This segment identifies young adult customers (20-39 years old) who demonstrate 
 ### At-Risk Customers
 
 This segment identifies customers who are showing signs of disengagement and are at a higher risk of churning. More details, including the specific criteria and BigQuery SQL query, can be found in the [At-Risk Customers](at_risk_customers.md) file.
+
+### RFM Customer Segmentation
+
+This analysis segments customers based on their Recency (how recently they purchased), Frequency (how often they purchase), and Monetary (how much they spend) values. More details, including the specific criteria and BigQuery SQL query, can be found in the [RFM Customer Segmentation](rfm_customer_segmentation.md) file.

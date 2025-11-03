@@ -1,0 +1,14 @@
+{
+  "name": "RFM Customer Segmentation",
+  "category": "Customer Segmentation",
+  "description": "This analysis segments customers based on their Recency (how recently they purchased), Frequency (how often they purchase), and Monetary (how much they spend) values. This helps in identifying different customer groups for targeted marketing strategies.",
+  "insights": "RFM segmentation allows for a deeper understanding of customer behavior, enabling businesses to tailor campaigns, improve retention, and optimize resource allocation. For example, 'Champions' (high R, F, M) are your best customers, while 'At-Risk' customers (low R, F, M) might need re-engagement.",
+  "query": "SELECT customer_id, DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y-%m-%d', SUBSTR(CAST(date_of_last_purchase AS STRING), 1, 10)), DAY) AS Recency, total_number_of_orders AS Frequency, total_spent_ltv AS Monetary FROM `customer_data_retail.customers`",
+  "visualization": {
+    "type": "scatter",
+    "x_axis": "Frequency",
+    "y_axis": "Monetary",
+    "color_by": "Recency",
+    "tooltip": ["customer_id", "Recency", "Frequency", "Monetary"]
+  }
+}

@@ -54,15 +54,31 @@ Each JSON file should adhere to the following structure:
 ```json
 {
   "name": "[Name of the Segment/Analysis]",
+  "category": "[Category of the analysis, e.g., 'Customer Segmentation']",
   "description": "[A brief description of the segment or analysis]",
   "insights": "[Key insights derived from the analysis, actionable information]",
-  "query": "[The BigQuery SQL query used to retrieve the data for this segment/analysis]"
+  "query": "[The BigQuery SQL query used to retrieve the data for this segment/analysis]",
+  "visualization": {
+    "type": "[Type of D3 plot, e.g., 'bar', 'line', 'scatter']",
+    "x_axis": "[Column name for the x-axis]",
+    "y_axis": "[Column name for the y-axis]",
+    "color_by": "[Optional: Column name to color data points by]",
+    "tooltip": "[Optional: Array of column names to display in tooltips]"
+  }
 }
 ```
 
 **Fields Description:**
 
 *   `name` (string): A concise, human-readable name for the customer segment or analysis.
+*   `category` (string): A broad category for the analysis or segment (e.g., 'Customer Segmentation', 'Product Performance').
 *   `description` (string): A more detailed explanation of what the segment represents or what the analysis covers.
 *   `insights` (string): A summary of the key findings, actionable recommendations, or strategic implications derived from this segment/analysis.
 *   `query` (string): The complete and executable BigQuery SQL query that can be used to reproduce or retrieve the data for this specific segment or analysis. The query should be a single-line string with escaped newlines if necessary.
+*   `visualization` (object): Defines how the data should be visualized using D3.
+    *   `type` (string): The type of D3 plot to generate (e.g., 'bar', 'line', 'scatter').
+    *   `x_axis` (string): The column name from the query results to be used for the x-axis.
+    *   `y_axis` (string): The column name from the query results to be used for the y-axis.
+    *   `color_by` (string, optional): The column name to use for coloring data points or bars.
+    *   `tooltip` (array of strings, optional): A list of column names whose values should be displayed in tooltips when hovering over data points.
+

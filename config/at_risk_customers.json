@@ -1,6 +1,13 @@
 {
   "name": "At-Risk Customers",
+  "category": "Customer Segmentation",
   "description": "This segment identifies customers who are showing signs of disengagement and are at a higher risk of churning.",
   "insights": "These customers require proactive re-engagement strategies to prevent churn. Understanding the reasons for their inactivity is crucial for improving retention. Targeted incentives or personalized outreach could be effective.",
-  "query": "SELECT\n  customer_id,\n  date_of_last_purchase,\n  total_number_of_orders,\n  age,\n  gender,\n  location,\n  total_spent_ltv\nFROM\n  `customer_data_retail.customers`\nWHERE\n  DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y-%m-%d', SUBSTR(CAST(date_of_last_purchase AS STRING), 1, 10)), DAY) > 305\n  AND total_number_of_orders <= 4;"
+  "query": "SELECT total_number_of_orders, COUNT(customer_id) as customer_count FROM `customer_data_retail.customers` WHERE DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y-%m-%d', SUBSTR(CAST(date_of_last_purchase AS STRING), 1, 10)), DAY) > 305 AND total_number_of_orders <= 4 GROUP BY total_number_of_orders ORDER BY total_number_of_orders",
+  "visualization": {
+    "type": "bar",
+    "x_axis": "total_number_of_orders",
+    "y_axis": "customer_count",
+    "tooltip": ["total_number_of_orders", "customer_count"]
+  }
 }

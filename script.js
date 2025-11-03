@@ -1,137 +1,130 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const useCaseList = document.getElementById('use-case-list');
-    const useCaseDetails = document.getElementById('use-case-details');
+const useCaseList = document.getElementById('use-case-list');
+const useCaseDetails = document.getElementById('use-case-details');
 
-    // Hardcoded list of use case files for demonstration purposes.
-    // In a real application, this would be fetched from a backend API.
-    const useCaseFiles = [
-        'at_risk_customers.json',
-        'high_value_young_shoppers.json'
-    ];
+let allUseCases = []; // To store all fetched use case configurations
 
-    // Function to load a use case and render its details
-    async function loadUseCase(fileName) {
-        try {
-            const response = await fetch(`./config/${fileName}`);
-            const useCase = await response.json();
-
-            useCaseDetails.innerHTML = `
-                <h2>${useCase.name}</h2>
-                <p><strong>Description:</strong> ${useCase.description}</p>
-                <p><strong>Insights:</strong> ${useCase.insights}</p>
-                <h3>Visualization:</h3>
-                <div class="visualization-container" id="d3-visualization"></div>
-            `;
-
-            // Simulate BigQuery query execution and visualize data
-            await visualizeData(useCase.query);
-
-            // Update active class for navigation
-            Array.from(useCaseList.children).forEach(li => {
-                li.querySelector('a').classList.remove('active');
-            });
-            const activeLink = document.querySelector(`a[data-file="${fileName}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-
-        } catch (error) {
-            console.error('Error loading use case:', error);
-            useCaseDetails.innerHTML = `<p style="color: red;">Error loading use case details.</p>`;
+// Function to load a use case and render its details
+async function loadUseCase(fileName) {
+    try {
+        const useCase = allUseCases.find(uc => uc.fileName === fileName);
+        if (!useCase) {
+            console.error(`Use case for ${fileName} not found.`);
+            useCaseDetails.innerHTML = `<p style="color: red;">Error: Use case not found.</p>`;
+            return;
         }
+
+        useCaseDetails.innerHTML = `
+            <h2>${useCase.name}</h2>
+            <p><strong>Description:</strong> ${useCase.description}</p>
+            <p><strong>Insights:</strong> ${useCase.insights}</p>
+            <h3>BigQuery SQL Query:</h3>
+            <div class="query-container">
+                <pre><code class="language-sql" id="bigquery-query">${useCase.query}</code></pre>
+                <button class="copy-button" onclick="copyQuery()">Copy</button>
+            </div>
+            <h3>Visualization:</h3>
+            <div class="visualization-container" id="d3-visualization"></div>
+        `;
+        hljs.highlightElement(document.getElementById('bigquery-query'));
+
+        // Visualize data
+        await visualizeData(useCase);
+
+        // Update active class for navigation
+        Array.from(useCaseList.querySelectorAll('a')).forEach(link => {
+            link.classList.remove('active');
+        });
+        const activeLink = document.querySelector(`a[data-file="${fileName}"]`);
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
+
+    } catch (error) {
+        console.error('Error loading use case:', error);
+        useCaseDetails.innerHTML = `<p style="color: red;">Error loading use case details.</p>`;
+    }
+}
+
+// Function to simulate BigQuery query and visualize with D3.js
+async function visualizeData(useCase) {
+    const visualizationContainer = document.getElementById('d3-visualization');
+    if (!visualizationContainer) {
+        console.error('Visualization container not found.');
+        return;
+    }
+    visualizationContainer.innerHTML = ''; // Clear previous visualization
+
+    if (!useCase.visualization) {
+        visualizationContainer.innerHTML = `<p>No visualization configuration found for this use case.</p>`;
+        return;
     }
 
-    // Function to simulate BigQuery query and visualize with D3.js
-    async function visualizeData(query) {
-        const visualizationContainer = document.getElementById('d3-visualization');
-        if (!visualizationContainer) {
-            console.error('Visualization container not found.');
-            return;
+    try {
+        const response = await fetch('http://localhost:3000/query-bigquery', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: useCase.query }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        visualizationContainer.innerHTML = ''; // Clear previous visualization
 
-        // In a real application, this query would be sent to a backend
-        // which then executes it against BigQuery and returns the results.
-        // For this simple web app, we'll use mock data based on the query intent.
+        const data = await response.json();
 
-        let mockData = [];
-        let chartType = '';
-
-        if (query.includes('total_spent_ltv') && query.includes('age')) {
-            // Mock data for high_value_young_shoppers: age vs total_spent_ltv
-            chartType = 'Scatter Plot (Age vs. LTV)';
-            for (let i = 0; i < 50; i++) {
-                mockData.push({
-                    age: Math.floor(Math.random() * 15) + 18, // Ages 18-32
-                    ltv: Math.floor(Math.random() * 2000) + 500 // LTV $500-$2500
-                });
-            }
-        } else if (query.includes('return_rate_percent') && query.includes('customer_id')) {
-            // Mock data for at_risk_customers: return_rate_percent distribution
-            chartType = 'Bar Chart (Return Rate Distribution)';
-            const bins = ["0-5%", "5-10%", "10-15%", "15-20%", "20%+ "];
-            mockData = bins.map(bin => ({
-                range: bin,
-                count: Math.floor(Math.random() * 100) + 20
-            }));
-        } else {
-            visualizationContainer.innerHTML = `<p>No specific visualization logic for this query. Query: ${query}</p>`;
+        if (data.length === 0) {
+            visualizationContainer.innerHTML = `<p>No data returned for this query.</p>`;
             return;
         }
 
-        // D3.js Visualization
-        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
-        const width = 600 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const visConfig = useCase.visualization;
+        const margin = { top: 20, right: 30, bottom: 60, left: 60 }; // Increased bottom and left margin for labels
+
+        // Calculate width and height based on the container's actual size
+        const containerWidth = visualizationContainer.clientWidth;
+        const containerHeight = 450; // Set a default height or make it dynamic if needed
+
+        const width = containerWidth - margin.left - margin.right;
+        const height = containerHeight - margin.top - margin.bottom;
 
         const svg = d3.select(visualizationContainer)
             .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", containerWidth)
+            .attr("height", containerHeight)
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        if (chartType.includes('Scatter Plot')) {
-            // Scatter plot for Age vs. LTV
-            const x = d3.scaleLinear()
-                .domain([d3.min(mockData, d => d.age) - 1, d3.max(mockData, d => d.age) + 1]).range([0, width]);
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x));
+        // Add Tooltip
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0)
+            .style("position", "absolute")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "1px")
+            .style("border-radius", "5px")
+            .style("padding", "10px");
 
-            const y = d3.scaleLinear()
-                .domain([d3.min(mockData, d => d.ltv) - 100, d3.max(mockData, d => d.ltv) + 100]).range([height, 0]);
-            svg.append("g")
-                .call(d3.axisLeft(y));
+        // X and Y labels
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom - 10)
+            .style("text-anchor", "middle")
+            .text(visConfig.x_axis);
 
-            svg.append("g")
-                .selectAll("dot")
-                .data(mockData)
-                .enter()
-                .append("circle")
-                .attr("cx", d => x(d.age))
-                .attr("cy", d => y(d.ltv))
-                .attr("r", 5)
-                .style("fill", "#69b3a2");
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -margin.left + 20)
+            .attr("x", -height / 2)
+            .style("text-anchor", "middle")
+            .text(visConfig.y_axis);
 
-            svg.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + margin.bottom - 5)
-                .style("text-anchor", "middle")
-                .text("Age");
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -margin.left + 10)
-                .attr("x", -height / 2)
-                .style("text-anchor", "middle")
-                .text("Total Spent LTV");
-
-        } else if (chartType.includes('Bar Chart')) {
-            // Bar chart for Return Rate Distribution
+        if (visConfig.type === 'bar') {
             const x = d3.scaleBand()
                 .range([0, width])
-                .domain(mockData.map(d => d.range))
+                .domain(data.map(d => d[visConfig.x_axis]))
                 .padding(0.2);
             svg.append("g")
                 .attr("transform", `translate(0,${height})`)
@@ -141,57 +134,173 @@ document.addEventListener('DOMContentLoaded', () => {
                 .style("text-anchor", "end");
 
             const y = d3.scaleLinear()
-                .domain([0, d3.max(mockData, d => d.count) + 20]).range([height, 0]);
+                .domain([0, d3.max(data, d => d[visConfig.y_axis])]).range([height, 0]);
             svg.append("g")
                 .call(d3.axisLeft(y));
 
             svg.selectAll("mybar")
-                .data(mockData)
+                .data(data)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(d.range))
-                .attr("y", d => y(d.count))
+                .attr("x", d => x(d[visConfig.x_axis]))
+                .attr("y", d => y(d[visConfig.y_axis]))
                 .attr("width", x.bandwidth())
-                .attr("height", d => height - y(d.count))
-                .attr("fill", "#69b3a2");
+                .attr("height", d => height - y(d[visConfig.y_axis]))
+                .attr("fill", "#69b3a2")
+                .on("mouseover", function(event, d) {
+                    tooltip.style("opacity", 1);
+                    let tooltipHtml = `<strong>${visConfig.x_axis}:</strong> ${d[visConfig.x_axis]}<br/><strong>${visConfig.y_axis}:</strong> ${d[visConfig.y_axis]}`;
+                    if (visConfig.tooltip) {
+                        visConfig.tooltip.forEach(col => {
+                            tooltipHtml += `<br/><strong>${col}:</strong> ${d[col]}`;
+                        });
+                    }
+                    tooltip.html(tooltipHtml)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 20) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.style("opacity", 0);
+                });
 
-            svg.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + margin.bottom - 5)
-                .style("text-anchor", "middle")
-                .text("Return Rate Range");
+        } else if (visConfig.type === 'scatter') {
+            const x = d3.scaleLinear()
+                .domain([d3.min(data, d => d[visConfig.x_axis]), d3.max(data, d => d[visConfig.x_axis])]).range([0, width]);
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
 
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -margin.left + 10)
-                .attr("x", -height / 2)
-                .style("text-anchor", "middle")
-                .text("Number of Customers");
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d[visConfig.y_axis]), d3.max(data, d => d[visConfig.y_axis])]).range([height, 0]);
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            svg.append("g")
+                .selectAll("dot")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", d => x(d[visConfig.x_axis]))
+                .attr("cy", d => y(d[visConfig.y_axis]))
+                .attr("r", 5)
+                .style("fill", d => visConfig.color_by ? color(d[visConfig.color_by]) : "#69b3a2")
+                .on("mouseover", function(event, d) {
+                    tooltip.style("opacity", 1);
+                    let tooltipHtml = `<strong>${visConfig.x_axis}:</strong> ${d[visConfig.x_axis]}<br/><strong>${visConfig.y_axis}:</strong> ${d[visConfig.y_axis]}`;
+                    if (visConfig.color_by) {
+                        tooltipHtml += `<br/><strong>${visConfig.color_by}:</strong> ${d[visConfig.color_by]}`;
+                    }
+                    if (visConfig.tooltip) {
+                        visConfig.tooltip.forEach(col => {
+                            tooltipHtml += `<br/><strong>${col}:</strong> ${d[col]}`;
+                        });
+                    }
+                    tooltip.html(tooltipHtml)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 20) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.style("opacity", 0);
+                });
+
+        } else {
+            visualizationContainer.innerHTML = `<p>Unsupported visualization type: ${visConfig.type}</p>`;
         }
 
-        // Create and prepend the title more robustly
         const titleElement = document.createElement('h4');
-        titleElement.textContent = chartType;
+        titleElement.textContent = useCase.name;
         visualizationContainer.prepend(titleElement);
+
+    } catch (error) {
+        console.error('Error visualizing data:', error);
+        visualizationContainer.innerHTML = `<p style="color: red;">Error visualizing data: ${error.message}</p>`;
+    }
+}
+
+// Populate the navigation list
+async function populateNavigation() {
+    const categories = new Map(); // Map to store categories and their use cases
+
+    try {
+        const response = await fetch('http://localhost:3000/list-config-files');
+        const fileNames = await response.json();
+
+        // Fetch content for each use case file
+        const fetchPromises = fileNames.map(async fileName => {
+            try {
+                const configResponse = await fetch(`./config/${fileName}`);
+                const useCase = await configResponse.json();
+                return { ...useCase, fileName }; // Store fileName along with useCase data
+            } catch (error) {
+                console.error(`Error loading config file ${fileName}:`, error);
+                return null; // Return null for failed fetches
+            }
+        });
+
+        allUseCases = (await Promise.all(fetchPromises)).filter(uc => uc !== null); // Filter out failed fetches
+
+    } catch (error) {
+        console.error('Error fetching config file list:', error);
+        useCaseList.innerHTML = `<p style="color: red;">Error loading use cases: ${error.message}</p>`;
+        return;
     }
 
-    // Populate the navigation list
-    useCaseFiles.forEach(fileName => {
-        const listItem = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = "#";
-        link.textContent = fileName.replace('.json', '').replace(/_/g, ' ');
-        link.setAttribute('data-file', fileName);
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadUseCase(fileName);
-        });
-        listItem.appendChild(link);
-        useCaseList.appendChild(listItem);
+    useCaseList.innerHTML = ''; // Clear existing list
+
+    // Group use cases by category
+    allUseCases.forEach(useCase => {
+        if (!categories.has(useCase.category)) {
+            categories.set(useCase.category, []);
+        }
+        categories.get(useCase.category).push(useCase);
     });
 
-    // Load the first use case by default
-    if (useCaseFiles.length > 0) {
-        loadUseCase(useCaseFiles[0]);
+    for (const [category, cases] of categories.entries()) {
+        const categoryHeader = document.createElement('h3');
+        categoryHeader.textContent = category;
+        useCaseList.appendChild(categoryHeader);
+
+        const categoryUl = document.createElement('ul');
+        cases.forEach(useCase => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = "#";
+            link.textContent = useCase.name;
+            link.setAttribute('data-file', useCase.fileName);
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadUseCase(useCase.fileName);
+            });
+            listItem.appendChild(link);
+            categoryUl.appendChild(listItem);
+        });
+        useCaseList.appendChild(categoryUl);
     }
+
+    // Load the first use case of the first category by default
+    if (allUseCases.length > 0) {
+        const firstCategory = categories.keys().next().value;
+        if (firstCategory) {
+            const firstUseCase = categories.get(firstCategory)[0];
+            if (firstUseCase) {
+                loadUseCase(firstUseCase.fileName);
+            }
+        }
+    }
+}
+
+function copyQuery() {
+    const queryElement = document.getElementById('bigquery-query');
+    const queryText = queryElement.textContent;
+    navigator.clipboard.writeText(queryText).then(() => {
+        alert('BigQuery query copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy query: ', err);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    populateNavigation();
 });
