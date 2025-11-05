@@ -1,0 +1,15 @@
+description = "Initiate a data repo - Set up the right connection to BigQuery and document the data structure in the GEMINI.md context file"
+prompt = """
+Populate the GEMINI.md markdown file with the data structure of the data referenced in the current context.
+See markdown structure below: 
+## BigQuery Data Overview
+
+### Dataset: `[DATASET_NAME]`
+### Table: `[TABLE_NAME]`
+
+**Schema Summary:**
+The `[TABLE_NAME]` table contains `[NUMBER_OF_ROWS]` rows and includes the following key columns:
+*   `[COLUMN_NAME]`: [COLUMN_DESCRIPTION]
+*   `[COLUMN_NAME]`: [COLUMN_DESCRIPTION]
+*   `[COLUMN_NAME]`: [COLUMN_DESCRIPTION]
+"""

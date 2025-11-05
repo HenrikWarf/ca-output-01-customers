@@ -49,13 +49,13 @@ main {
     background-color: #e9ecef; /* Light gray background */
     border-radius: 8px;
     margin: 20px auto; /* Center the description and add vertical margin */
-    max-width: 800px; /* Make the description div smaller */
+    max-width: 600px; /* Align with query and visualization containers */
     color: #343a40;
-    font-size: 1em;
     line-height: 1.6;
 }
 
 #app-description p {
+    font-size: 0.9em; /* Smaller font size */
     margin: 0;
 }
 
@@ -147,6 +147,16 @@ main {
 
 #use-case-details p {
     margin-bottom: 10px;
+    font-size: 0.9em; /* Smaller font size for description and insights */
+    max-width: 600px; /* Align with query and visualization containers */
+}
+
+.insights-content {
+    max-width: 600px; /* Align with query and visualization containers */
+}
+
+.insights-content li {
+    font-size: 0.9em; /* Smaller font size for list items */
 }
 
 .query-container {
