@@ -68,7 +68,13 @@ This document provides comprehensive instructions for setting up and utilizing t
 The `GEMINI.md` file serves as the primary context for the Gemini CLI, describing your BigQuery data structure. This section guides you on updating it for your new project.
 
 1.  **Identify Your BigQuery Data:**
-    Determine the specific BigQuery dataset(s) and table(s) you intend to analyze in your new project.
+    Determine the specific BigQuery dataset(s) and table(s) you intend to analyze in your new project. You can use the Gemini CLI to help discover your available data.
+
+    **Examples of questions to ask the Gemini CLI to identify your BigQuery data:**
+    *   "List all datasets in my BigQuery project."
+    *   "Show me all tables in the 'your_dataset_id' dataset."
+    *   "What is the schema for the 'your_dataset_id.your_table_id' table?"
+    *   "Describe the 'your_dataset_id.your_table_id' table."
 
 2.  **Discover BigQuery Schema using Gemini CLI Tools:**
     You can use the Gemini CLI's BigQuery extension to inspect your data. This extension allows you to list available datasets within your Google Cloud Project and then list the tables within a specific dataset. You can also retrieve detailed schema information (column names, types, descriptions) for any given table.
