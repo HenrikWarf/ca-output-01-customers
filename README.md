@@ -133,4 +133,5 @@ Once your `GEMINI.md` is updated and your data context is established, you can l
 ## V. Advanced Usage and Customization
 
 *   **Creating New Gemini Commands:** To automate complex workflows or frequently used analyses, create new shell scripts in the `.gemini/commands/` directory. These scripts can combine multiple Gemini CLI tool calls (e.g., `execute_sql`, `analyze_contribution`, `forecast`) and leverage your `config/*.json` files.
+*   **Integrating with Looker and MCP Toolbox:** Utilize the Gemini CLI's integration capabilities with Looker and the MCP (Model-Centric Platform) toolbox service. This allows for advanced data visualization and dashboarding. For example, you can create Looker Dashboards directly from the analysis results obtained through the Gemini CLI, enabling rich, interactive data exploration and sharing of insights.
 *   **Leveraging Other BigQuery Tools:** Explore other available BigQuery tools in the Gemini CLI (e.g., `analyze_contribution`, `forecast`) to perform more advanced data analytics tasks.

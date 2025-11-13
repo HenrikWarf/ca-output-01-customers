@@ -41,5 +41,5 @@ target/
 *.sublime-project
 *.sublime-workspace
 
-# Gemini specific ignores
-.gemini/
+# # Gemini specific ignores
+# .gemini/

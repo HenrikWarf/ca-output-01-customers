@@ -4,22 +4,18 @@ When a new customer segment is identified and analyzed, follow these steps to do
 1.  **Identify and Define the Segment:** Clearly define the criteria for the new customer segment based on data analysis.
 2.  **Perform Analysis and Extract Data:** Use BigQuery (or other relevant tools) to extract the customer data for the identified segment.
 3.  **Create a Dedicated Markdown File:**
-    *   Create a new markdown file (e.g., `[segment_name].md`) in the root directory.
+    *   Create a new markdown file (e.g., `[segment_name].md`) in the use_case_docs directory.
     *   Include a "Use Case Description" explaining the segment's value.
     *   Detail the "Segmentation Criteria" with any thresholds and their derivation.
     *   Provide the "BigQuery Implementation" (SQL query) used to retrieve the segment.
     *   Suggest "How to Use This Segment" with actionable insights.
-4.  **Update `README.md`:**
+4.  **Update `SEGMENTS.md`:**
     *   Under the `## Customer Segmentation` heading, add a new sub-heading for the new segment.
     *   Provide a brief description of the segment.
     *   Include a link to the newly created markdown file (e.g., `[Segment Name]([segment_name].md)`).
-
-# Workflow: Creating JSON Configuration Files for Analysis
-
-For each significant analysis or customer segment identified, a corresponding JSON configuration file should be created in the `config/` directory. These files serve to standardize the documentation of analysis results and provide a machine-readable format for potential applications.
-
-Each JSON file should adhere to the following structure:
-
+5.Creating JSON Configuration Files for Analysis
+    *   For each significant analysis or customer segment identified, a corresponding JSON configuration file should be created in the `config/` directory. These files serve to standardize the documentation of analysis results and provide a machine-readable format for potential applications.
+    *   Each JSON file should adhere to the following structure:
 ```json
 {
   "name": "[Name of the Segment/Analysis]",
